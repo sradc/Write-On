@@ -3,7 +3,7 @@
 [https://write-on.io/](https://write-on.io/)
 
 
-This app is to help keep the drafting phase of writing seperate from the editing phase.
+This app is to help keep the drafting phase of writing separate from the editing phase.
 
 It prevents you from going back. You can only write on.
 
