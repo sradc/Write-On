@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+
+<html lang="en" class="fill">
+
+<head>
+  <title>Write On</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+
+<body class="fill">
+
+  <div id="content"
+    style="width: 90%; max-width: 666px; height: 100%; margin: auto; display: flex; flex-direction: column; align-items: center;">
+
+    <div
+      style="flex: 1; width: 100%; max-width: 100%; max-height: 66px; display: flex; align-items: center; margin: 0;">
+
+      <h1 style="font-size: 28px;">Write On</h1>
+
+      <div id="spacer" style="flex: 1"></div>
+
+      <img class="button" src="res/copy.svg" alt="Copy your work." onclick="textToClipboard()" title="Copy your work">
+      <img class="button" src="res/trash.svg" alt="Delete your work." onclick="clearText()" title="Delete your work">
+      <img class="button" src="res/expand.svg" alt="Toggle fullscreen." onclick="toggleFullScreen()"
+        title="Toggle fullscreen">
+      <img class="button" src="res/help.svg" alt="About this app." onclick="toggleAbout()" title="About this app">
+
+    </div>
+
+    <div id="about" style="display: none;">
+
+      <p>
+        This app is to help keep the drafting phase of writing
+        seperate from the editing phase.
+      </p>
+
+      <p>
+        It prevents you from going back. You can only <i>write on</i>.
+      </p>
+
+      <p>
+        Don't worry about mistakes until the draft is done.
+        Build momentum and get into the flow.
+      </p>
+
+      <hr>
+
+      <p><b>Make sure to copy your work and save it somewhere safe.</b></p>
+
+      <hr>
+
+      <p>
+        Smart devices aren't supported yet, due to auto-complete.
+      </p>
+
+      <a href="https://github.com/sradc/Write-On">GitHub page.</a>
+
+      <br><br>
+
+    </div>
+
+    <textarea id="textarea"
+      style="flex: 1; width: 100%; overflow-wrap: break-word; resize: none; font-size: 16px; margin: 10px 0px 10px 0px;">
+    </textarea>
+
+  </div>
+
+</body>
+
+<style>
+  .fill {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+  }
+
+  .button {
+    flex: 1;
+    max-width: 44px;
+    margin: 0px 2px 0px 2px;
+    border: 1px solid lightgray
+  }
+</style>
+
+<script>
+
+  const N_COMPARE = 10  // number of chars to compare.
+  const N_SAVE = 20  // save every N_SAVE chars.
+
+  const textArea = document.getElementById('textarea')
+
+  var prevText = ''
+
+  const storage = {
+    saveTxt: text => localStorage.setItem('write-on', text),
+    loadTxt: () => localStorage.getItem('write-on'),
+    deleteTxt: () => localStorage.removeItem('write-on'),
+  }
+
+  // Load text from storage:
+  textArea.value = storage.loadTxt() || ''
+  prevText = textArea.value
+
+  // Handle input.
+  textArea.addEventListener('input', e => {
+
+    const startIdx = Math.max(prevText.length - N_COMPARE, 0)
+    const endIdx = prevText.length
+
+    // Compare the last N_COMPARE chars.
+    // If they don't match, don't allow the change.
+    if (event.target.value.slice(startIdx, endIdx) !== prevText.slice(startIdx, endIdx)) {
+      textArea.value = prevText
+      return
+    }
+    prevText = event.target.value
+
+    // Save every ~N_SAVE chars.
+    if (prevText.length % N_SAVE === 0) {
+      storage.saveTxt(prevText)
+    }
+
+  })
+
+  // Attempt to save the users work:
+
+  window.addEventListener("unload", e => {
+    storage.saveTxt(prevText)
+  })
+
+  textArea.addEventListener('focusout', e => {
+    storage.saveTxt(prevText)
+  })
+
+
+  // Buttons:
+
+  function textToClipboard() {
+    if (window.confirm('Copy the text to your clipboard?')) {
+      textArea.select()
+      document.execCommand("copy")
+    }
+  }
+
+  function clearText() {
+    if (window.confirm('Are you sure you want to clear your work?')) {
+      textArea.value = ''
+      prevText = ''
+      storage.deleteTxt()
+    }
+  }
+
+  function toggleFullScreen() {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    }
+  }
+
+  function toggleAbout() {
+    if (document.getElementById('about').style.display === 'block') {
+      document.getElementById('about').style.display = 'none'
+    } else {
+      document.getElementById('about').style.display = 'block'
+    }
+  }
+
+</script>
+
+
+</html>
+
+<!-- Icons: https://ionicons.com/ https://www.flaticon.com/ -->
