@@ -44,6 +44,8 @@
 
     <div id="about" style="display: none;">
 
+      <h3>About this app</h3>
+
       <p>
         This app is to help keep the drafting phase of writing
         separate from the editing phase.
@@ -65,12 +67,38 @@
       <hr>
 
       <p>
-        Smart devices aren't supported yet, due to auto-complete.
+        Your work is stored locally by your web browser (it is not sent to any servers).
+        However, please copy and save it somewhere safe.
       </p>
 
-      <a href="https://github.com/sradc/Write-On">GitHub page.</a>
+      <p>
+        Some smart devices aren't supported yet, due to auto-complete.
+      </p>
 
-      <br><br>
+      <p>
+        The button icons are from <a href="https://ionicons.com/">Ionicons</a>.
+        The typewriter favicon is by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from
+        <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>.
+      </p>
+
+      <p>
+        <a href="https://github.com/sradc/Write-On">The source code for this app is on GitHub.</a>
+      </p>
+
+      <p>If you'd like, you can:</p>
+
+      <script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js"
+        data-name="bmc-button" data-slug="sidneyradcliffe" data-color="#ffffff" data-emoji="" data-font="Cookie"
+        data-text="Buy me a coffee" data-outline-color="#000000" data-font-color="#000000"
+        data-coffee-color="#FFDD00"></script>
+
+      <p>
+        Created by <a href="https://sidsite.com/">Sidney Radcliffe</a>
+      </p>
+
+      <div style="display: flex; justify-content: center; align-items: center;">
+        <img class="button" src="res/up.svg" alt="Close about." onclick="closeAbout()" title="Close about">
+      </div>
 
     </div>
 
@@ -182,6 +210,22 @@
       document.getElementById('about').style.display = 'block'
     }
   }
+
+  function closeAbout() {
+    document.getElementById('about').style.display = 'none'
+  }
+
+
+  // The first time a user visits the site, show the about page.
+  function openAboutOnFirstVisit() {
+    const isNotFirstVisit = localStorage.getItem('first-visit') || false
+    if (isNotFirstVisit) {
+      return
+    }
+    document.getElementById('about').style.display = 'block'
+    localStorage.setItem('first-visit', 'true')
+  }
+  openAboutOnFirstVisit()
 
 </script>
 
